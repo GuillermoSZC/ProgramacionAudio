@@ -39,9 +39,15 @@
     <ClInclude Include="..\openal\AL\alut.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AudioBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AudioBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,6 +15,8 @@
 #include <fstream>     
 #include <iterator>
 
+#include "../src/AudioBuffer.h"
+
 int main()
 {
     ALCdevice* device = alcOpenDevice(nullptr);

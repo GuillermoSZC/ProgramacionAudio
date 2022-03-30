@@ -27,8 +27,10 @@
     <ClInclude Include="..\openal\AL\efx-creative.h" />
     <ClInclude Include="..\openal\AL\efx-presets.h" />
     <ClInclude Include="..\openal\AL\efx.h" />
+    <ClInclude Include="..\src\AudioBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\AudioBuffer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
