@@ -32,6 +32,7 @@ int main() {
     float x = 0.f, y = 0.f, z = 0.f;
     bool doOnce = false;
     bool doOnceSupp = false;
+    float audioSourceMovement = 0.f;
 
 #pragma endregion
 
@@ -98,6 +99,14 @@ int main() {
         {
             aSource->Stop();
         }
+
+        audioSourceMovement += 0.1f * deltaTime;
+
+        lgfx_setcolor(1.f, 1.f, 1.f, 0.f);
+        lgfx_drawoval(widthScreen * 0.5f, heightScreen * 0.5f, 25.f, 25.f);
+
+        lgfx_setcolor(1.f, 0.f, 0.f, 0.f);
+        lgfx_drawrect(widthScreen * 0.6f, heightScreen * 0.6f, 25.f, 25.f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
