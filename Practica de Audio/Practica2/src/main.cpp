@@ -7,6 +7,8 @@
 #endif
 
 #define LITE_GFX_IMPLEMENTATION
+#define PI 3.14159265359
+
 #include <glfw3.h>
 #include <sstream>
 #include <vector>
@@ -24,15 +26,22 @@ int main() {
 #pragma region VARIABLES
     Listener* listener = Listener::GetInstance();
 
-    int widthScreen = 1080;
+    int widthScreen = 1280;
     int heightScreen = 960;
-    double deltaTime = 0, lastTime = 0, updateTime = glfwGetTime();
     const float pitch = 0.01f;
     const float position = 0.1f;
+    float xListenerPosition = widthScreen * 0.5f, yListenerPosition = 800.f;
+    float deltaTime = 0.f, currentTime = 0.f, lastTime = 0.f;
     float x = 0.f, y = 0.f, z = 0.f;
+    float audioSourceMovement = 0.f;
+    float xPosition = 0.f, yPosition = 0.f;
+    float limitMovement = 150.f;
+    float speed = 2.f;
+    float distanceTo = 260.f;
+    float rectSize = 20.f;
+    float angle = 0.f;
     bool doOnce = false;
     bool doOnceSupp = false;
-    float audioSourceMovement = 0.f;
 
 #pragma endregion
 
@@ -40,12 +49,17 @@ int main() {
     if (!device)
     {
         printf("Error trying to init device.\n");
-        return 1;
+        return -1;
     }
     ALCcontext* context = alcCreateContext(device, nullptr);
     alcMakeContextCurrent(context);
 
-    glfwInit();
+    if (!glfwInit())
+    {
+        printf("Can't init GLFW.\n");
+        return -1;
+    }
+
     GLFWwindow* window = glfwCreateWindow(widthScreen, heightScreen, "Practica 1 - Sonido ", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     lgfx_setup2d(widthScreen, heightScreen);
@@ -59,19 +73,27 @@ int main() {
     {
         lgfx_clearcolorbuffer(0, 0, 0);
 
-        lastTime = updateTime;
-        updateTime = glfwGetTime();
-        deltaTime = updateTime - lastTime;
+        currentTime = (float)glfwGetTime();
+        deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         {
             aSource->UpdatePosition(x, y, z);
             aSource->SetPosition(x - position, y, z);
+            if (xListenerPosition > widthScreen * 0.5f - limitMovement)
+            {
+                xListenerPosition -= 6.f;
+            }
         }
         else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         {
             aSource->UpdatePosition(x, y, z);
             aSource->SetPosition(x + position, y, z);
+            if (xListenerPosition < widthScreen * 0.5f + limitMovement)
+            {
+                xListenerPosition += 6.f;
+            }
         }
         else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         {
@@ -100,13 +122,19 @@ int main() {
             aSource->Stop();
         }
 
-        audioSourceMovement += 0.1f * deltaTime;
+        audioSourceMovement += 0.1f * (float)deltaTime;
 
         lgfx_setcolor(1.f, 1.f, 1.f, 0.f);
-        lgfx_drawoval(widthScreen * 0.5f, heightScreen * 0.5f, 25.f, 25.f);
+        lgfx_drawoval(xListenerPosition, yListenerPosition, 25.f, 25.f);
+
+        angle = 32.f * ((float)PI / 180.f);
+        xPosition = widthScreen * 0.5f;
+        yPosition = heightScreen * 0.5f;
+        xPosition = xPosition + (float)cos(angle * glfwGetTime() * speed) * distanceTo;
+        yPosition = yPosition + (float)sin(angle * glfwGetTime() * speed) * distanceTo;
 
         lgfx_setcolor(1.f, 0.f, 0.f, 0.f);
-        lgfx_drawrect(widthScreen * 0.6f, heightScreen * 0.6f, 25.f, 25.f);
+        lgfx_drawrect(xPosition, yPosition, rectSize, rectSize);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
