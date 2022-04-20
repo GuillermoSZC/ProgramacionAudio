@@ -30,11 +30,12 @@ int main() {
     int heightScreen = 960;
     const float pitch = 0.01f;
     const float position = 0.1f;
-    float xListenerPosition = widthScreen * 0.5f, yListenerPosition = 800.f;
+    float xListenerPosition = widthScreen * 0.5f, yListenerPosition = 800.f, zListenerPosition = 0.f;
     float deltaTime = 0.f, currentTime = 0.f, lastTime = 0.f;
     float x = 0.f, y = 0.f, z = 0.f;
     float audioSourceMovement = 0.f;
     float xPosition = 0.f, yPosition = 0.f;
+    float xPrev = 0.f, yPrev = 0.f;
     float limitMovement = 150.f;
     float speed = 2.f;
     float distanceTo = 260.f;
@@ -79,20 +80,18 @@ int main() {
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         {
-            aSource->UpdatePosition(x, y, z);
-            aSource->SetPosition(x - position, y, z);
             if (xListenerPosition > widthScreen * 0.5f - limitMovement)
             {
                 xListenerPosition -= 6.f;
+                listener->SetListenerPosition(xListenerPosition, yListenerPosition, zListenerPosition);
             }
         }
         else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         {
-            aSource->UpdatePosition(x, y, z);
-            aSource->SetPosition(x + position, y, z);
             if (xListenerPosition < widthScreen * 0.5f + limitMovement)
             {
                 xListenerPosition += 6.f;
+                listener->SetListenerPosition(xListenerPosition, yListenerPosition, zListenerPosition);
             }
         }
         else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -122,19 +121,21 @@ int main() {
             aSource->Stop();
         }
 
-        audioSourceMovement += 0.1f * (float)deltaTime;
-
-        lgfx_setcolor(1.f, 1.f, 1.f, 0.f);
-        lgfx_drawoval(xListenerPosition, yListenerPosition, 25.f, 25.f);
-
         angle = 32.f * ((float)PI / 180.f);
         xPosition = widthScreen * 0.5f;
         yPosition = heightScreen * 0.5f;
         xPosition = xPosition + (float)cos(angle * glfwGetTime() * speed) * distanceTo;
         yPosition = yPosition + (float)sin(angle * glfwGetTime() * speed) * distanceTo;
+        aSource->SetPosition(xPosition, yPosition, z);
+        aSource->SetVelocity((xPosition - xPrev), (yPosition - yPrev), z);
+        xPrev = xPosition;
+        yPrev = yPosition;
 
         lgfx_setcolor(1.f, 0.f, 0.f, 0.f);
         lgfx_drawrect(xPosition, yPosition, rectSize, rectSize);
+
+        lgfx_setcolor(1.f, 1.f, 1.f, 0.f);
+        lgfx_drawoval(xListenerPosition, yListenerPosition, 25.f, 25.f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
