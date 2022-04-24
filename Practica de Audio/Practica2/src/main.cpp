@@ -30,7 +30,7 @@ int main() {
     int heightScreen = 960;
     const float pitch = 0.01f;
     const float position = 0.1f;
-    float xListenerPosition = widthScreen * 0.5f, yListenerPosition = 800.f, zListenerPosition = 0.f;
+    float xListenerPosition = widthScreen * 0.5f, yListenerPosition = 750.f, zListenerPosition = 0.f;
     float deltaTime = 0.f, currentTime = 0.f, lastTime = 0.f;
     float x = 0.f, y = 0.f, z = 0.f;
     float audioSourceMovement = 0.f;
@@ -61,7 +61,7 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(widthScreen, heightScreen, "Practica 1 - Sonido ", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(widthScreen, heightScreen, "Practica 2 - Sonido ", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     lgfx_setup2d(widthScreen, heightScreen);
 
