@@ -41,6 +41,7 @@ int main() {
     float distanceTo = 260.f;
     float rectSize = 20.f;
     float angle = 0.f;
+    float velocity = 100.f;
     bool doOnce = false;
     bool doOnceSupp = false;
 
@@ -69,6 +70,8 @@ int main() {
     auto aSource = new AudioSource(aBuffer);
 
     aSource->Play();
+    // aSource->SetGain(20);
+    alDopplerFactor(2);
 
     while (!glfwWindowShouldClose(window)) // ~ Game loop
     {
@@ -84,6 +87,7 @@ int main() {
             {
                 xListenerPosition -= 6.f;
                 listener->SetListenerPosition(xListenerPosition, yListenerPosition, zListenerPosition);
+                listener->SetListenerVelocity(-velocity, 0.f, 0.f);
             }
         }
         else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -92,6 +96,7 @@ int main() {
             {
                 xListenerPosition += 6.f;
                 listener->SetListenerPosition(xListenerPosition, yListenerPosition, zListenerPosition);
+                listener->SetListenerVelocity(velocity, 0.f, 0.f);
             }
         }
         else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -152,6 +157,5 @@ int main() {
     alcDestroyContext(context);
     alcCloseDevice(device);
 #pragma endregion
-
     return 0;
 }
